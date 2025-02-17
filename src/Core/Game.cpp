@@ -5,9 +5,12 @@
 #include <Core/ResourceManager.h>
 #include <Core/BallObject.h>
 #include <Rendering/SpriteRenderer.h>
+#include <Rendering/ParticleGenerator.h>
 
 // Game-related State data
 SpriteRenderer* Renderer;
+// Particles
+ParticleGenerator* Particles;
 // Player game objec
 GameObject* Player;
 // Ball game object
@@ -29,6 +32,7 @@ void Game::Init()
 {
     // Load shaders
     ResourceManager::LoadShader("assets/shaders/default.vert", "assets/shaders/default.frag", nullptr, "sprite");
+    ResourceManager::LoadShader("assets/shaders/particle.vert", "assets/shaders/particle.frag", nullptr, "particle");
 
     // Configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width),
@@ -41,6 +45,7 @@ void Game::Init()
 
     // Load textures
     ResourceManager::LoadTexture("assets/textures/background.jpg", false, "background");
+    ResourceManager::LoadTexture("assets/textures/particle.png", true, "particle");
     ResourceManager::LoadTexture("assets/textures/paddle.png", true, "paddle");
     ResourceManager::LoadTexture("assets/textures/awesomeface.png", true, "face");
     ResourceManager::LoadTexture("assets/textures/block.png", false, "block");
@@ -66,6 +71,14 @@ void Game::Init()
     // Ball
     glm::vec2 ballPosition{ playerPosition + glm::vec2{PLAYER_SIZE.x / 2.0f - BALL_RADIUS, -BALL_RADIUS * 2.0f} };
     Ball = new BallObject(ballPosition, BALL_RADIUS, INITIAL_BALL_VELOCITY, ResourceManager::GetTexture("face"));
+
+    // Particles
+    Particles = new ParticleGenerator(
+        ResourceManager::GetShader("particle"),
+        ResourceManager::GetTexture("particle"),
+        500
+    );
+    ResourceManager::GetShader("particle").Use().SetMatrix4("projection", projection);
 }
 
 void Game::ProcessInput(float deltaTime)
@@ -120,6 +133,9 @@ void Game::Update(float deltaTime)
         this->ResetLevel();
         this->ResetPlayer();
     }
+
+    // Update particles
+    Particles->Update(deltaTime, *Ball, 2, glm::vec2{ Ball->Radius / 2.0f });
 }
 
 void Game::Render()
@@ -133,6 +149,7 @@ void Game::Render()
         this->Levels[this->Level].Draw(*Renderer);
 
         Player->Draw(*Renderer);
+        Particles->Draw();
         Ball->Draw(*Renderer);
     }
 }
