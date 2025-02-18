@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 
 #include "GameLevel.h"
+#include "PowerUp.h"
 
 enum GameState
 {
@@ -53,6 +54,8 @@ public:
     void DoCollisions();
     void ResetLevel();
     void ResetPlayer();
+    void SpawnPowerUps(GameObject& block);
+    void UpdatePowerUps(float deltaTime);
 
 public:
     // Game state
@@ -61,5 +64,6 @@ public:
     unsigned int Width, Height;
     std::vector<GameLevel> Levels;
     unsigned int Level{ 0 };
+    std::vector<PowerUp> PowerUps;
 };
 

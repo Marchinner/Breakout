@@ -48,7 +48,7 @@ void ParticleGenerator::Draw()
             this->shader.SetVector2f("offset", particle.Position);
             this->shader.SetVector4f("color", particle.Color);
             this->texture.Bind();
-            
+                
             glBindVertexArray(this->VAO);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);

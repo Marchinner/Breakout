@@ -16,5 +16,7 @@ public:
     // Ball state
     float Radius;
     bool Stuck;
+    bool Sticky;
+    bool PassThrough;
 };
 

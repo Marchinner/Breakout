@@ -1,7 +1,7 @@
 #include "Core/BallObject.h"
 
 BallObject::BallObject()
-    : GameObject(), Radius{ 12.5f }, Stuck{ true }
+    : GameObject(), Radius{ 12.5f }, Stuck{ true }, Sticky{ false }, PassThrough{ false }
 {
 }
 
@@ -9,6 +9,8 @@ BallObject::BallObject(glm::vec2 position, float radius, glm::vec2 velocity, Tex
     : GameObject(position, glm::vec2{ radius * 2.0f, radius * 2.0f }, sprite, glm::vec3{ 1.0f }, velocity)
     , Radius{ radius }
     , Stuck{ true }
+    , Sticky{ false }
+    , PassThrough{ false }
 {
 }
 
@@ -47,4 +49,6 @@ void BallObject::Reset(glm::vec2 position, glm::vec2 velocity)
     this->Position = position;
     this->Velocity = velocity;
     this->Stuck = true;
+    this->Sticky = false;
+    this->PassThrough = false;
 }
